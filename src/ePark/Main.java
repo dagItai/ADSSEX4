@@ -11,7 +11,7 @@ public class Main {
 
     private List<Device> parkDevices = new ArrayList<>();
     private List<Kid> kids = new ArrayList<>();
-    private List<Guardian> guardians = new ArrayList<>();
+    private List<WebUser> webUsers = new ArrayList<>();
     private List<eBand> eBands = new ArrayList<>();
     private List<CreditCompany> parkCompanies = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class Main {
                     addKid();
                     continue;
                 case 2:
-                    showKid();
+                    showMyKids();
                     continue;
                 case 3:
                     int kidID = chooseKidMenu();
@@ -128,7 +128,7 @@ public class Main {
     private void addEntries(int kidID) {
     }
 
-    private void showKid() {
+    private void showMyKids() {
 
     }
 
