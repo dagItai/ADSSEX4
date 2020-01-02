@@ -10,6 +10,7 @@ public class eBand {
     // MEMBER VARIABLES
     //------------------------
 
+    private static int bandID = 0;
     //src.impl.eBand Attributes
     private int ID;
 
@@ -26,6 +27,11 @@ public class eBand {
         if (!didAddKid) {
             throw new RuntimeException("Unable to create src.impl.eBand due to kid. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
         }
+    }
+
+    public eBand() {
+        ID = bandID;
+        bandID++;
     }
 
     //------------------------

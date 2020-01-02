@@ -7,49 +7,216 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
     public static List<Object> systemObjects = new ArrayList<>();
 
-    private static List<Device> parkDevices = new ArrayList<>();
-    private static List<Kid> kids = new ArrayList<>();
-    private static List<Guardian> guardians = new ArrayList<>();
-    private static List<eBand> eBands = new ArrayList<>();
+    private List<Device> parkDevices = new ArrayList<>();
+    private List<Kid> kids = new ArrayList<>();
+    private List<Guardian> guardians = new ArrayList<>();
+    private List<eBand> eBands = new ArrayList<>();
+    private List<CreditCompany> parkCompanies = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.println("Welcome to our ePark system");
-        addStartDervices();
         Main ePark = new Main();
-        ePark.printMainMenu();
+        ePark.mainMenu();
     }
 
-    private static void addStartDervices() {
-        Device mamba = new Device(1,"Mamba Ride",false,false,false,true,140,0,12);
-        Device wheel = new Device(2,"Giant Wheel",false,false,false,false,0,0,0);
-        Device carrousel = new Device(3,"Carrousel",false,false,false,false,0,0,8);
-        parkDevices.add(mamba);
-        systemObjects.add(mamba);
-        parkDevices.add(wheel);
-        systemObjects.add(wheel);
-        parkDevices.add(carrousel);
-        systemObjects.add(carrousel);
+    public void mainMenu() throws Exception {
+        Scanner input = new Scanner(System.in);
+        boolean exit = false;
+        WebUser wb;
+        while (!exit) {
+            int choice = printFirstStepMenu();
+            switch (choice) {
+                case 1:
+                    wb = loginMenu();
+                    if (wb != null)
+                        loggedInUser(wb);
+                    continue;
+                case 2:
+                    wb = signUpMenu();
+                    if (wb != null)
+                        loggedInUser(wb);
+                    continue;
+                case 3:
+                    System.out.println("Goodbye, see you again soon :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
     }
 
-    private int printMainMenu() {
-        int optionn = 0;
+    private WebUser signUpMenu() {
+        //UC-1
+        Kid newKid = addKid();
+        return null;
+    }
+
+    private Kid addKid() {
+        return null;
+    }
+
+    private WebUser loginMenu() {
+        return null;
+    }
+
+    private void loggedInUser(WebUser webUser) {
+        Scanner input = new Scanner(System.in);
+        boolean exit = false;
+        WebUser wb;
+        while (!exit) {
+            int choice = printSecondStepMenu();
+            switch (choice) {
+                case 1:
+                    addKid();
+                    continue;
+                case 2:
+                    showKid();
+                    continue;
+                case 3:
+                    int kidID = chooseKidMenu();
+                    manageKid(kidID);
+                    continue;
+                case 4:
+                    System.out.println("Goodbye, see you again soon :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
+    }
+
+    private int chooseKidMenu() {
+        return 0;
+    }
+
+    private void manageKid(int kidID) {
+        Scanner input = new Scanner(System.in);
+        boolean exit = false;
+        WebUser wb;
+        while (!exit) {
+            int choice = printThirdStepMenu();
+            switch (choice) {
+                case 1:
+                    addEntries(kidID);
+                    continue;
+                case 2:
+                    removeEntries(kidID);
+                    continue;
+                case 3:
+                    removeKid(kidID);
+                    continue;
+                case 4:
+                    System.out.println("Goodbye, see you again soon :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
+    }
+
+    private void removeKid(int kidID) {
+    }
+
+    private void removeEntries(int kidID) {
+    }
+
+    private void addEntries(int kidID) {
+    }
+
+    private void showKid() {
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public Main() {
+        addStartDevices();
+        addCreditCardCompanies();
+    }
+
+    private void addCreditCardCompanies() {
+        CreditCompany visa = new CreditCompany("Visa");
+        CreditCompany masterCard = new CreditCompany("Master Card");
+        CreditCompany amex = new CreditCompany("American Express");
+        parkCompanies.add(visa);
+        Main.systemObjects.add(visa);
+        parkCompanies.add(masterCard);
+        Main.systemObjects.add(masterCard);
+        parkCompanies.add(amex);
+        Main.systemObjects.add(amex);
+    }
+
+    private int printFirstStepMenu() {
+        int option = 0;
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Main Menu:");
         System.out.println("--------------");
         System.out.println("1.Login");
-        System.out.println("2.Add products");
-        System.out.println("3.Edit products ");
-        System.out.println("4.Remove products ");
-        System.out.println("5.Add users");
-        System.out.println("6.Edit users ");
-        System.out.println("7.Remove users ");
-        System.out.println("8.Exit ");
+        System.out.println("2.Sign Up");
+        System.out.println("3.Exit");
         System.out.println("--------------");
-        System.out.println("Enter your choice:");
-        optionn = keyboard.nextInt();
-        return optionn;
+        System.out.println("Please enter your choice:");
+        try {
+            option = keyboard.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid choice:");
+            return -1;
+        }
+        return option;
+    }
+
+    private int printSecondStepMenu() {
+        int option = 0;
+        Scanner keyboard = new Scanner(System.in);
+        System.out.println("Main Menu:");
+        System.out.println("--------------");
+        System.out.println("1.Add kid");
+        System.out.println("2.Show my kids");
+        System.out.println("3.Manage specific kid");
+        System.out.println("--------------");
+        System.out.println("Please enter your choice:");
+        try {
+            option = keyboard.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid choice!");
+            return -1;
+        }
+        return option;
+    }
+
+    private int printThirdStepMenu() {
+        int option = 0;
+        Scanner keyboard = new Scanner(System.in);
+        System.out.println("Main Menu:");
+        System.out.println("--------------");
+        System.out.println("1.Add Entries");
+        System.out.println("2.Remove Entries");
+        System.out.println("3.Remove kid from the park");
+        System.out.println("--------------");
+        System.out.println("Please enter your choice:");
+        try {
+            option = keyboard.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid choice");
+            return -1;
+        }
+        return option;
+    }
+
+    private void addStartDevices() {
+        Device mamba = new Device(1, "Mamba Ride", false, false, false, true, 140, 0, 12);
+        Device wheel = new Device(2, "Giant Wheel", false, false, false, false, 0, 0, 0);
+        Device carrousel = new Device(3, "Carrousel", false, false, false, false, 0, 0, 8);
+        parkDevices.add(mamba);
+        Main.systemObjects.add(mamba);
+        parkDevices.add(wheel);
+        Main.systemObjects.add(wheel);
+        parkDevices.add(carrousel);
+        Main.systemObjects.add(carrousel);
     }
 }
