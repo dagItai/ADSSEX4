@@ -62,6 +62,11 @@ public class Account {
         return wasSet;
     }
 
+    public boolean addToBalance(int amount){
+        this.balance += amount;
+        return true;
+    }
+
     public int getCreditCard() {
         return creditCard;
     }
@@ -117,5 +122,13 @@ public class Account {
                 "balance" + ":" + getBalance() + "]" + System.getProperties().getProperty("line.separator") +
                 "  " + "creditCompany = " + (getCreditCompany() != null ? Integer.toHexString(System.identityHashCode(getCreditCompany())) : "null") + System.getProperties().getProperty("line.separator") +
                 "  " + "guardian = " + (getGuardian() != null ? Integer.toHexString(System.identityHashCode(getGuardian())) : "null");
+    }
+
+    public boolean removeFromBalance(int amount) {
+        if(amount > balance){
+            return false;
+        }
+        balance=-amount;
+        return true;
     }
 }

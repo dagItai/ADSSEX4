@@ -144,6 +144,14 @@ public class eTicket {
         return wasRemoved;
     }
 
+    public Entry getEntryByID(int entryID){
+        for (Entry entry : entries) {
+            if (entry.getDeviceID() == entryID)
+                return entry;
+        }
+        return null;
+    }
+
     /* Code from template association_AddIndexControlFunctions */
     public boolean addEntryAt(Entry aEntry, int index) {
         boolean wasAdded = false;
