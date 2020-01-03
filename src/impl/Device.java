@@ -269,6 +269,10 @@ public class Device
         return wasAdded;
     }
 
+    public boolean validDeviceForKid(int kidAge, int kidHeight, int kidWeight){
+        return kidAge>=minAge && kidHeight >= minHeight && kidAge >= kidWeight;
+    }
+
     public void delete()
     {
         for(int i=kids.size(); i > 0; i--)
