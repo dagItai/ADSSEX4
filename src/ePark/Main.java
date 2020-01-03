@@ -2,10 +2,7 @@ package ePark;
 
 import impl.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Main {
     public static List<Object> systemObjects = new ArrayList<>();
@@ -15,10 +12,9 @@ public class Main {
     private List<WebUser> webUsers = new ArrayList<>();
     private List<eBand> eBands = new ArrayList<>();
     private List<CreditCompany> parkCompanies = new ArrayList<>();
-    //yaara
-    private CreditCardController CreditCardController;
-    private eBandController eBandController;
-    private EquipmentController equipmentController;
+    private CreditCardController ccController = new CreditCardController();
+    private EquipmentController equipmentController = new EquipmentController();
+    private static int kID=1;
     private ParkController parkController;
 
     private eBandController eBandController = new eBandController();
@@ -56,16 +52,186 @@ public class Main {
 
     private WebUser signUpMenu() {
         //UC-1
-        Kid newKid = addKid();
-        return null;
+        Scanner keyBoard = new Scanner(System.in);
+        String kidName="";
+        String kidAge="";
+        String creditNumber="";
+        String limitCredit="";
+        String userName="";
+        String password="";
+        int gID=0;
+        String gName="";
+
+        //Try Get Web User Details
+        System.out.println("Please Enter User Name The You Will Login In To The App Next Time");
+        userName=keyBoard.nextLine();
+        Random rand = new Random();
+        password = String.format("%04d", rand.nextInt(10000));
+        System.out.println("Your Password For This User Is "+ password+"\n Please Don't Lose It");
+
+        //Try Get Guardian Details
+        System.out.println("Now Please Enter Your ID");
+        boolean validId=false;
+        while(!validId){
+            try{
+                gID = keyBoard.nextInt();
+                validId=true;
+            }catch (Exception e){
+                System.out.println("It Must Be A Number, Please Try Again");
+            }
+        }
+        System.out.println("Please Enter Your Name");
+        gName = keyBoard.nextLine();
+
+        //Try Get Kid Details
+        boolean validKid = false;
+        while (!validKid){
+            System.out.println("Please Enter Your Kid's Name");
+            kidName = keyBoard.nextLine();
+            System.out.println("Please Enter Your Kid Age");
+            kidAge = keyBoard.nextLine();
+            if(!checkValidKidDeatiles(kidName,kidAge)) {
+                System.out.println("Something went wrong .. Below Are The Details Entered\n Kid Name: " + kidName + "\n Kid Age: " + kidAge);
+            }
+            else{
+                validKid=true;
+            }
+        }
+
+        //Try Get Credit Card Details
+        System.out.println(" Great, Now Please Enter A Credit Card Number\n Please note that we accept the following tickets:\n" +
+                "Visa, which starts with 1\n" +
+                "Mastercard, which starts with 2\n" +
+                "American Express, which starts with 3");
+        creditNumber = keyBoard.nextLine();
+        System.out.println("And Now Please Enter Your Budget Limit For The Park, Please Note That The  Your Budget Limit Should Be At Least $10");
+        limitCredit = keyBoard.nextLine();
+        if(!checkValidCredit(creditNumber,limitCredit)) {
+            System.out.println("Something went wrong .. We Sorry But You Will Have To Go All This Process Again");
+            return null;
+        }
+
+
+        //Great! Create An Account, WebUser, Guardian
+        System.out.println("Great! We Open For You A User, Please Wait A Minute");
+        Guardian newGuardian = new Guardian(gID,gName,Integer.valueOf(creditNumber));
+        WebUser newWebUser = new WebUser(userName,password,newGuardian);
+        Account newAccount = new Account(Integer.valueOf(creditNumber),Integer.valueOf(limitCredit),creditCompanyFromCreditNumber(creditNumber),newGuardian);
+        newGuardian.setWebUser(newWebUser);
+        newGuardian.setAccount(newAccount);
+        //Create kid, eTicket
+        Kid newKid = new Kid(kID,kidName,Integer.valueOf(kidAge),newGuardian);
+        eTicket newKideTicket = new eTicket(kID, new Date(),newKid);
+        kID++;
+        //Create eBand
+        eBand newKideband = equipmentController.createNewEBand();
+        //setAll
+        newKideband.setKid(newKid);
+        newKid.seteBand(newKideband);
+        newKid.seteTicket(newKideTicket);
+        newKideTicket.setKid(newKid);
+
+        //Last Step - Measuring
+        System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
+        List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
+        newKid.setHeight(measures.get(0));
+        newKid.setWeight(measures.get(1));
+
+        newGuardian.addKid(newKid);
+
+        //Add All To systemObjects
+        systemObjects.add(newWebUser);
+        systemObjects.add(newAccount);
+        systemObjects.add(newGuardian);
+        systemObjects.add(newKid);
+        systemObjects.add(newKideband);
+        systemObjects.add(newKideTicket);
+        //Add To WebUsers
+        webUsers.add(newWebUser);
+
+        return newWebUser;
+
+    }
+
+
+
+    //Alisa
+    private CreditCompany creditCompanyFromCreditNumber(String cNumber){
+        int firstNumber = Integer.valueOf(cNumber.charAt(0));
+        if(firstNumber==1){
+            return parkCompanies.get(1);
+        }
+        else if(firstNumber==2){
+            return parkCompanies.get(2);
+        }
+        else {
+            return parkCompanies.get(3);
+        }
+    }
+    //Alisa
+    private boolean checkValidCredit(String creditNumber, String limitCredit) {
+        try {
+            int creditNum = Integer.valueOf(creditNumber);
+            int firstNumber = Integer.valueOf(creditNumber.charAt(0));
+            int creditLimit = Integer.valueOf(limitCredit);
+            if(firstNumber<1 || firstNumber>4 || creditLimit<10){
+                return false;
+            }
+            return ccController.validateCard(creditNum,creditLimit);
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    //Alisa
+    private boolean checkValidKidDeatiles(String kidName, String kidAge) {
+        try {
+            if(Integer.valueOf(kidAge)<1 || kidName.length()<1){
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     private Kid addKid() {
         return null;
     }
 
-    private WebUser loginMenu() {
+    //Alisa
+    private WebUser loginMenu(){
+        Scanner keyBoard = new Scanner(System.in);
+        String userName;
+        String password;
+        System.out.println("Please Enter Your User Name");
+        userName=keyBoard.nextLine();
+        System.out.println("Please Enter Your Password");
+        password = keyBoard.nextLine();
+        WebUser webUser =checkValidPasswordAndUser(userName,password);
+        if(webUser!=null){
+            return webUser;
+        }
+        else{
+            System.out.println("User Credentials Are Not Valid, Please Try To Login In Again");
+            return null;
+        }
+    }
+
+    //Alisa
+    private WebUser checkValidPasswordAndUser(String userName, String password) {
+        for (WebUser webUser : webUsers) {
+            if(webUser.getUserName().equals(userName)){
+                if(webUser.getPassword().equals(password)){
+                    return webUser;
+                }
+                else{
+                    return null;
+                }
+            }
+        }
         return null;
+
     }
 
     private void loggedInUser(WebUser webUser) {
@@ -286,6 +452,7 @@ public class Main {
     public Main() {
         addStartDevices();
         addCreditCardCompanies();
+
     }
 
     private void addCreditCardCompanies() {

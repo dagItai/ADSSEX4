@@ -152,4 +152,7 @@ public class CreditCompany {
         return super.toString() + "[" +
                 "name" + ":" + getName() + "]";
     }
+
+
+
 }
