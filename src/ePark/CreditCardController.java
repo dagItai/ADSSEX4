@@ -8,7 +8,7 @@ public class CreditCardController {
 
     //Validate that you have enough amount in the card
     public boolean validateCard(int creditCardNumber, int amount){
-        return false;
+        return true;
     }
 
     public boolean validateThatThisCardIsAssignedToThisCompany(int creditCardNumber){

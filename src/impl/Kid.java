@@ -20,6 +20,7 @@ public class Kid {
     private int age;
     private boolean ridingDevice;
 
+
     //src.impl.Kid Associations
     private eTicket eTicket;
     private eBand eBand;
@@ -69,6 +70,18 @@ public class Kid {
         }
     }
 
+    //Alisa
+    public Kid(int aID, String aName,int aAge, Guardian aGuardian) {
+        ID = aID;
+        name = aName;
+        age = aAge;
+        boolean didAddGuardian = setGuardian(aGuardian);
+        if (!didAddGuardian) {
+            throw new RuntimeException("Unable to create kid due to guardian. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+        }
+    }
+
+
     //------------------------
     // INTERFACE
     //------------------------
@@ -113,6 +126,15 @@ public class Kid {
         ridingDevice = aRidingDevice;
         wasSet = true;
         return wasSet;
+    }
+
+
+    public void seteTicket(impl.eTicket eTicket) {
+        this.eTicket = eTicket;
+    }
+
+    public void seteBand(impl.eBand eBand) {
+        this.eBand = eBand;
     }
 
     public int getID() {
@@ -267,4 +289,6 @@ public class Kid {
                 "  " + "device = " + (getDevice() != null ? Integer.toHexString(System.identityHashCode(getDevice())) : "null") + System.getProperties().getProperty("line.separator") +
                 "  " + "guardian = " + (getGuardian() != null ? Integer.toHexString(System.identityHashCode(getGuardian())) : "null");
     }
+
+
 }

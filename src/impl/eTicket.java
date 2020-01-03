@@ -2,9 +2,10 @@ package impl;/*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.29.1.4753.5a97eca04 modeling language!*/
 
 
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 // line 38 "system.ump"
@@ -21,6 +22,9 @@ public class eTicket {
 
     //src.impl.eTicket Associations
     private List<Entry> entries;
+
+
+
     private Kid kid;
 
     //------------------------
@@ -53,6 +57,9 @@ public class eTicket {
         id = aId;
         wasSet = true;
         return wasSet;
+    }
+    public void setKid(Kid kid) {
+        this.kid = kid;
     }
 
     public boolean setExpireDate(Date aExpireDate) {

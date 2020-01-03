@@ -21,13 +21,7 @@ public class eBand {
     // CONSTRUCTOR
     //------------------------
 
-    public eBand(int aID, Kid aKid) {
-        ID = aID;
-        boolean didAddKid = setKid(aKid);
-        if (!didAddKid) {
-            throw new RuntimeException("Unable to create src.impl.eBand due to kid. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-        }
-    }
+
 
     public eBand() {
         ID = bandID;

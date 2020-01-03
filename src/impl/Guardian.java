@@ -19,6 +19,7 @@ public class Guardian {
     private String name;
     private int creditCard;
 
+
     //src.impl.Guardian Associations
     private Account account;
     private WebUser webUser;
@@ -51,6 +52,23 @@ public class Guardian {
         webUser = new WebUser(aUserNameForWebUser, aPasswordForWebUser, this);
         kids = new ArrayList<Kid>();
     }
+    //Alisa
+    public Guardian(int aID, String aName, int aCreditCard){
+        ID = aID;
+        name = aName;
+        creditCard = aCreditCard;
+    }
+
+    public void setAccount(Account newAccount) {
+        account=newAccount;
+    }
+
+    public void setWebUser(WebUser webUser) {
+        this.webUser = webUser;
+    }
+
+
+
 
     //------------------------
     // INTERFACE
@@ -240,4 +258,5 @@ public class Guardian {
                 "  " + "account = " + (getAccount() != null ? Integer.toHexString(System.identityHashCode(getAccount())) : "null") + System.getProperties().getProperty("line.separator") +
                 "  " + "webUser = " + (getWebUser() != null ? Integer.toHexString(System.identityHashCode(getWebUser())) : "null");
     }
+
 }
