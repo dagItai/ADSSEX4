@@ -15,6 +15,11 @@ public class Main {
     private List<WebUser> webUsers = new ArrayList<>();
     private List<eBand> eBands = new ArrayList<>();
     private List<CreditCompany> parkCompanies = new ArrayList<>();
+    //yaara
+    private CreditCardController CreditCardController;
+    private eBandController eBandController;
+    private EquipmentController equipmentController;
+    private ParkController parkController;
 
     private eBandController eBandController = new eBandController();
     public static void main(String[] args) {
@@ -114,7 +119,7 @@ public class Main {
                     removeEntries(currentKid, webUser, eTick);
                     continue;
                 case 3:
-                    removeKid(kidID);
+                    removeKid(kidID, wb);
                     continue;
                 case 4:
                     System.out.println("Goodbye, see you again soon :) ");
@@ -126,7 +131,9 @@ public class Main {
         }
     }
 
-    private void removeKid(int kidID) {
+    private void removeKid(int kidID, WebUser wb) {
+
+
     }
 
     //----------------------------------------------------------------Itai---------------------------------------------------------------------------------------------------
