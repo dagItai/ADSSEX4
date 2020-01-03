@@ -14,6 +14,11 @@ public class Main {
     private List<WebUser> webUsers = new ArrayList<>();
     private List<eBand> eBands = new ArrayList<>();
     private List<CreditCompany> parkCompanies = new ArrayList<>();
+    //yaara
+    private CreditCardController CreditCardController;
+    private eBandController eBandController;
+    private EquipmentController equipmentController;
+    private ParkController parkController;
 
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to our ePark system");
@@ -77,7 +82,7 @@ public class Main {
                     continue;
                 case 3:
                     int kidID = chooseKidMenu();
-                    manageKid(kidID);
+                    manageKid(kidID,webUser);
                     continue;
                 case 4:
                     System.out.println("Goodbye, see you again soon :) ");
@@ -93,10 +98,10 @@ public class Main {
         return 0;
     }
 
-    private void manageKid(int kidID) {
+    private void manageKid(int kidID, WebUser wb) {
         Scanner input = new Scanner(System.in);
         boolean exit = false;
-        WebUser wb;
+
         while (!exit) {
             int choice = printThirdStepMenu();
             switch (choice) {
@@ -107,7 +112,7 @@ public class Main {
                     removeEntries(kidID);
                     continue;
                 case 3:
-                    removeKid(kidID);
+                    removeKid(kidID, wb);
                     continue;
                 case 4:
                     System.out.println("Goodbye, see you again soon :) ");
@@ -119,7 +124,9 @@ public class Main {
         }
     }
 
-    private void removeKid(int kidID) {
+    private void removeKid(int kidID, WebUser wb) {
+
+
     }
 
     private void removeEntries(int kidID) {
