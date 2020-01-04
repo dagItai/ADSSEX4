@@ -25,7 +25,50 @@ public class Main {
         ePark.mainMenu();
     }
 
-    private Kid addKid() {
+    private Kid addKid(Guardian guardian) {
+        Scanner keyBoard = new Scanner(System.in);
+        String kidName="";
+        String kidAge="";
+        boolean validKid = false;
+        while (!validKid){
+            System.out.println("Please Enter Your Kid's Name");
+            kidName = keyBoard.next();
+            System.out.println("Please Enter Your Kid Age");
+            kidAge = keyBoard.next();
+            if(!checkValidKidDetails(kidName,kidAge)) {
+                System.out.println("Something went wrong .. Below Are The Details Entered\n Kid Name: " + kidName + "\n Kid Age: " + kidAge);
+            }
+            else{
+                validKid=true;
+            }
+        }
+        Kid newKid = new Kid(kID,kidName,Integer.valueOf(kidAge),guardian);
+        eTicket newKideTicket = new eTicket(kID, new Date(),newKid);
+        kID++;
+        //Create eBand
+        eBand newKideband = equipmentController.createNewEBand();
+        //setAll
+        newKideband.setKid(newKid);
+        newKid.seteBand(newKideband);
+        newKid.seteTicket(newKideTicket);
+        newKideTicket.setKid(newKid);
+        System.out.println( newKid.getName()+ " added to your kids");
+        //Last Step - Measuring
+        System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
+        List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
+        newKid.setHeight(measures.get(0));
+        newKid.setWeight(measures.get(1));
+
+        guardian.addKid(newKid);
+
+        //Add All To systemObjects
+        systemObjects.add(newKid);
+        systemObjects.add(newKideband);
+        systemObjects.add(newKideTicket);
+        //Add To local lists
+        kids.add(newKid);
+
+
         return null;
     }
 
@@ -52,7 +95,42 @@ public class Main {
         return 0;
     }
 
-    private void removeKid(int kidID, WebUser webUser) {
+    private void removeKid(Kid kid, Guardian guardian) {
+
+        System.out.println("First ,please return " +kid.getName()+"'s eBand");
+        equipmentController.returnUsedBand(kid.getEBand());
+        System.out.println("Now we will remove "+kid.getName()+" from the system, please wait");
+        int numOfEntries = kid.getETicket().getEntries().size();
+        int finalCharge = numOfEntries*10;
+        if ( finalCharge>0 ){// we need to pay balnace < maxPrice
+            if (ccController.chargeCard(guardian.getCreditCard(), finalCharge)){
+                System.out.println("We will charge your credit card for: "+ finalCharge+ " shekel");
+                System.out.println("balance:" +guardian.getAccount().getBalance());
+            }
+        }
+        if (guardian.removeKid(kid)){
+
+            systemObjects.remove(kid.getETicket());
+            systemObjects.remove(kid);
+            kids.remove(kid);
+
+            kid.delete();
+           // System.out.println("");
+
+        }
+        else { // means he is only child:)
+
+            systemObjects.remove(guardian);
+            systemObjects.remove(guardian.getWebUser());
+            systemObjects.remove(guardian.getAccount());
+            systemObjects.remove(kid.getETicket());
+            systemObjects.remove(kid);
+            kids.remove(kid);
+            webUsers.remove(guardian.getWebUser());
+
+            guardian.delete();
+
+        }
 
     }
 
@@ -174,6 +252,8 @@ public class Main {
         systemObjects.add(newKideTicket);
         //Add To WebUsers
         webUsers.add(newWebUser);
+        //Add To local lists
+        kids.add(newKid);
 
         return newWebUser;
 
@@ -489,8 +569,9 @@ public class Main {
                     removeEntries(currentKid, webUser, eTick);
                     continue;
                 case 3:
-                    removeKid(kidID, webUser);
-                    continue;
+                    removeKid(currentKid, webUser.getGuardian());
+                    exit = true;
+                    break;
                 case 4:
                     showETicket(currentKid,eTick);
                     continue;
@@ -510,7 +591,7 @@ public class Main {
             int choice = printSecondStepMenu();
             switch (choice) {
                 case 1:
-                    addKid();
+                     addKid(webUser.getGuardian());
                     continue;
                 case 2:
                     showMyKids(webUser);

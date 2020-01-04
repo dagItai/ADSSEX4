@@ -3,7 +3,9 @@ package ePark;
 public class CreditCardController {
     //Charge in the end the company
     public boolean chargeCard(int creditCardNumber, int amount){
-        return false;
+
+
+        return true;
     }
 
     //Validate that you have enough amount in the card

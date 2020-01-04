@@ -185,7 +185,7 @@ public class Guardian {
     public boolean removeKid(Kid aKid) {
         boolean wasRemoved = false;
         //Unable to remove aKid, as it must always have a guardian
-        if (this.equals(aKid.getGuardian())) {
+        if (! this.equals(aKid.getGuardian())) {
             return wasRemoved;
         }
 

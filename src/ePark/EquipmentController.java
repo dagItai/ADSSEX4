@@ -30,6 +30,10 @@ public class EquipmentController {
     }
 
     public boolean returnUsedBand(eBand eBand) {
+        if (eBand!= null){
+            existingBands.add(eBand);
+            return true;
+        }
         return false;
     }
 }

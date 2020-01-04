@@ -12,7 +12,7 @@ public class Account {
     //src.impl.Account Attributes
     private int creditCard;
     private int balance;
-
+    private int maxPrice;
     //src.impl.Account Associations
     private CreditCompany creditCompany;
     private Guardian guardian;
@@ -24,6 +24,7 @@ public class Account {
     public Account(int aCreditCard, int aBalance, CreditCompany aCreditCompany, Guardian aGuardian) {
         creditCard = aCreditCard;
         balance = aBalance;
+        maxPrice = aBalance;
         boolean didAddCreditCompany = setCreditCompany(aCreditCompany);
         if (!didAddCreditCompany) {
             throw new RuntimeException("Unable to create account due to creditCompany. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -60,6 +61,10 @@ public class Account {
         balance = aBalance;
         wasSet = true;
         return wasSet;
+    }
+
+    public int getMaxPrice() {
+        return maxPrice;
     }
 
     public boolean addToBalance(int amount){
