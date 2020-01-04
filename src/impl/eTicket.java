@@ -144,8 +144,8 @@ public class eTicket {
         return wasRemoved;
     }
 
-    public Entry getEntryByID(int entryID){
-        for (Entry entry : entries) {
+    public Entry getEntryByID(Kid kid, Integer entryID){
+        for (Entry entry : kid.getETicket().getEntries()) {
             if (entry.getDeviceID() == entryID)
                 return entry;
         }

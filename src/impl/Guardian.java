@@ -52,11 +52,13 @@ public class Guardian {
         webUser = new WebUser(aUserNameForWebUser, aPasswordForWebUser, this);
         kids = new ArrayList<Kid>();
     }
+
     //Alisa
     public Guardian(int aID, String aName, int aCreditCard){
         ID = aID;
         name = aName;
         creditCard = aCreditCard;
+        kids = new ArrayList<Kid>();
     }
 
     public void setAccount(Account newAccount) {

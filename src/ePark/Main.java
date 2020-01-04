@@ -3,6 +3,7 @@ package ePark;
 import impl.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static List<Object> systemObjects = new ArrayList<>();
@@ -24,29 +25,53 @@ public class Main {
         ePark.mainMenu();
     }
 
-    public void mainMenu(){
-        boolean exit = false;
-        WebUser wb;
-        while (!exit) {
-            int choice = printFirstStepMenu();
-            switch (choice) {
-                case 1:
-                    wb = loginMenu();
-                    if (wb != null)
-                        loggedInUser(wb);
+    private Kid addKid() {
+        return null;
+    }
+
+    private int chooseKidMenu(WebUser webUser) {
+        System.out.println("Here are all the kids that are associated with you");
+        webUser.getGuardian().getKids().stream().forEach(e ->
+                System.out.println("Name: " + e.getName() + " ,Id: " + e.getID()));
+        System.out.println("Please choose the ID you would like to manage");
+        Scanner keyboard = new Scanner(System.in);
+        boolean selected = false;
+        while (!selected) {
+            try {
+                int choice = keyboard.nextInt();
+                if (webUser.getGuardian().getKids().stream().anyMatch(e -> e.getID()==choice)){
+                    return choice;
+                }else {
                     continue;
-                case 2:
-                    wb = signUpMenu();
-                    if (wb != null)
-                        loggedInUser(wb);
-                    continue;
-                case 3:
-                    System.out.println("Goodbye, see you again soon :) ");
-                    exit = true;
-                    break;
-                default:
-                    System.out.println("Wrong choice");
+                }
+            } catch (Exception e) {
+                System.out.println("please enter valid ID from the shown list");
+                keyboard.nextLine();
             }
+        }
+        return 0;
+    }
+
+    private void removeKid(int kidID, WebUser webUser) {
+
+    }
+
+    //----------------------------------------------------------------Alisa---------------------------------------------------------------------------------------------------
+    private WebUser loginMenu(){
+        Scanner keyBoard = new Scanner(System.in);
+        String userName;
+        String password;
+        System.out.println("Please Enter Your User Name");
+        userName=keyBoard.nextLine();
+        System.out.println("Please Enter Your Password");
+        password = keyBoard.nextLine();
+        WebUser webUser =checkValidPasswordAndUser(userName,password);
+        if(webUser!=null){
+            return webUser;
+        }
+        else{
+            System.out.println("User Credentials Are Not Valid, Please Try To Login In Again");
+            return null;
         }
     }
 
@@ -64,7 +89,7 @@ public class Main {
 
         //Try Get Web User Details
         System.out.println("Please Enter User Name The You Will Login In To The App Next Time");
-        userName=keyBoard.nextLine();
+        userName=keyBoard.next();
         Random rand = new Random();
         password = String.format("%04d", rand.nextInt(10000));
         System.out.println("Your Password For This User Is "+ password+"\n Please Don't Lose It");
@@ -78,19 +103,20 @@ public class Main {
                 validId=true;
             }catch (Exception e){
                 System.out.println("It Must Be A Number, Please Try Again");
+                keyBoard.nextLine();
             }
         }
         System.out.println("Please Enter Your Name");
-        gName = keyBoard.nextLine();
+        gName = keyBoard.next();
 
         //Try Get Kid Details
         boolean validKid = false;
         while (!validKid){
             System.out.println("Please Enter Your Kid's Name");
-            kidName = keyBoard.nextLine();
+            kidName = keyBoard.next();
             System.out.println("Please Enter Your Kid Age");
-            kidAge = keyBoard.nextLine();
-            if(!checkValidKidDeatiles(kidName,kidAge)) {
+            kidAge = keyBoard.next();
+            if(!checkValidKidDetails(kidName,kidAge)) {
                 System.out.println("Something went wrong .. Below Are The Details Entered\n Kid Name: " + kidName + "\n Kid Age: " + kidAge);
             }
             else{
@@ -103,9 +129,9 @@ public class Main {
                 "Visa, which starts with 1\n" +
                 "Mastercard, which starts with 2\n" +
                 "American Express, which starts with 3");
-        creditNumber = keyBoard.nextLine();
+        creditNumber = keyBoard.next();
         System.out.println("And Now Please Enter Your Budget Limit For The Park, Please Note That The  Your Budget Limit Should Be At Least $10");
-        limitCredit = keyBoard.nextLine();
+        limitCredit = keyBoard.next();
         if(!checkValidCredit(creditNumber,limitCredit)) {
             System.out.println("Something went wrong .. We Sorry But You Will Have To Go All This Process Again");
             return null;
@@ -153,72 +179,6 @@ public class Main {
 
     }
 
-
-
-    //Alisa
-    private CreditCompany creditCompanyFromCreditNumber(String cNumber){
-        int firstNumber = Integer.valueOf(cNumber.charAt(0));
-        if(firstNumber==1){
-            return parkCompanies.get(1);
-        }
-        else if(firstNumber==2){
-            return parkCompanies.get(2);
-        }
-        else {
-            return parkCompanies.get(3);
-        }
-    }
-    //Alisa
-    private boolean checkValidCredit(String creditNumber, String limitCredit) {
-        try {
-            int creditNum = Integer.valueOf(creditNumber);
-            int firstNumber = Integer.valueOf(creditNumber.charAt(0));
-            int creditLimit = Integer.valueOf(limitCredit);
-            if(firstNumber<1 || firstNumber>4 || creditLimit<10){
-                return false;
-            }
-            return ccController.validateCard(creditNum,creditLimit);
-        } catch (Exception e){
-            return false;
-        }
-    }
-
-    //Alisa
-    private boolean checkValidKidDeatiles(String kidName, String kidAge) {
-        try {
-            if(Integer.valueOf(kidAge)<1 || kidName.length()<1){
-                return false;
-            }
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-    private Kid addKid() {
-        return null;
-    }
-
-    //Alisa
-    private WebUser loginMenu(){
-        Scanner keyBoard = new Scanner(System.in);
-        String userName;
-        String password;
-        System.out.println("Please Enter Your User Name");
-        userName=keyBoard.nextLine();
-        System.out.println("Please Enter Your Password");
-        password = keyBoard.nextLine();
-        WebUser webUser =checkValidPasswordAndUser(userName,password);
-        if(webUser!=null){
-            return webUser;
-        }
-        else{
-            System.out.println("User Credentials Are Not Valid, Please Try To Login In Again");
-            return null;
-        }
-    }
-
-    //Alisa
     private WebUser checkValidPasswordAndUser(String userName, String password) {
         for (WebUser webUser : webUsers) {
             if(webUser.getUserName().equals(userName)){
@@ -234,82 +194,51 @@ public class Main {
 
     }
 
-    private void loggedInUser(WebUser webUser) {
-        Scanner input = new Scanner(System.in);
-        boolean exit = false;
-        WebUser wb;
-        while (!exit) {
-            int choice = printSecondStepMenu();
-            switch (choice) {
-                case 1:
-                    addKid();
-                    continue;
-                case 2:
-                    showMyKids(webUser);
-                    continue;
-                case 3:
-                    int kidID = chooseKidMenu();
-                    manageKid(kidID, webUser);
-                    continue;
-                case 4:
-                    System.out.println("Goodbye, see you again soon :) ");
-                    exit = true;
-                    break;
-                default:
-                    System.out.println("Wrong choice");
+    private boolean checkValidKidDetails(String kidName, String kidAge) {
+        try {
+            if(Integer.valueOf(kidAge)<1 || kidName.length()<1){
+                return false;
             }
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    private CreditCompany creditCompanyFromCreditNumber(String cNumber){
+        int firstNumber = Integer.valueOf(cNumber.charAt(0));
+        if(firstNumber==1){
+            return parkCompanies.get(0);
+        }
+        else if(firstNumber==2){
+            return parkCompanies.get(1);
+        }
+        else {
+            return parkCompanies.get(2);
         }
     }
 
-    private int chooseKidMenu() {
-        return 0;
-    }
-
-    private void manageKid(int kidID, WebUser webUser) {
-        Kid currentKid = null;
-        for (Kid kid : kids) {
-            if (kid.getID() == kidID) {
-                currentKid = kid;
+    private boolean checkValidCredit(String creditNumber, String limitCredit) {
+        try {
+            int creditNum = Integer.valueOf(creditNumber);
+            int firstNumber = Integer.parseInt(creditNumber.charAt(0)+"");
+            int creditLimit = Integer.valueOf(limitCredit);
+            if(firstNumber<1 || firstNumber>3 || creditLimit<10){
+                return false;
             }
-        }
-        eTicket eTick = currentKid.getETicket();
-        showETicket(currentKid, eTick);
-        boolean exit = false;
-        while (!exit) {
-            int choice = printThirdStepMenu();
-            switch (choice) {
-                case 1:
-                    addEntries(currentKid, webUser, eTick);
-                    continue;
-                case 2:
-                    removeEntries(currentKid, webUser, eTick);
-                    continue;
-                case 3:
-                    removeKid(kidID, wb);
-                    continue;
-                case 4:
-                    System.out.println("Goodbye, see you again soon :) ");
-                    exit = true;
-                    break;
-                default:
-                    System.out.println("Wrong choice");
-            }
+            return ccController.validateCard(creditNum,creditLimit);
+        } catch (Exception e){
+            return false;
         }
     }
-
-    private void removeKid(int kidID, WebUser wb) {
-
-
-    }
-
     //----------------------------------------------------------------Itai---------------------------------------------------------------------------------------------------
     private void removeEntries(Kid kidID, WebUser webUser, eTicket eTick) {
         List<Integer> devicesToDelete = chooseDevicesMenu(eTick);
         int removedEntries = 0;
         for (Integer integer : devicesToDelete) {
-            Entry e = eTick.getEntryByID(integer);
+            Entry e = eTick.getEntryByID(kidID,integer);
             if (e != null) {
-                eTick.removeEntry(e);
+                kidID.getETicket().removeEntry(e);
                 systemObjects.remove(e);
                 removedEntries++;
             }
@@ -337,6 +266,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("please enter valid number and make sure that the kid have this number");
+                keyboard.nextLine();
             }
         }
         return devicesToRemove;
@@ -394,6 +324,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("please enter valid number");
+                keyboard.nextLine();
             }
         }
         return addedEntries;
@@ -421,6 +352,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 System.out.println("please enter valid number");
+                keyboard.nextLine();
             }
         }
         return devicesToAdd;
@@ -448,7 +380,6 @@ public class Main {
                 System.out.println("Name: " + e.getName() + " ,Id: " + e.getID() + " ,Location: " + eBandController.getCoordinatesOfBand(e.getEBand())));
     }
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     public Main() {
         addStartDevices();
         addCreditCardCompanies();
@@ -513,6 +444,8 @@ public class Main {
         System.out.println("1.Add Entries");
         System.out.println("2.Remove Entries");
         System.out.println("3.Remove kid from the park");
+        System.out.println("4.Show eTicket again");
+        System.out.println("5.Take me back to previous menu");
         System.out.println("--------------");
         System.out.println("Please enter your choice:");
         try {
@@ -534,5 +467,91 @@ public class Main {
         Main.systemObjects.add(wheel);
         parkDevices.add(carrousel);
         Main.systemObjects.add(carrousel);
+    }
+
+    private void manageKid(int kidID, WebUser webUser) {
+        Kid currentKid = null;
+        for (Kid kid : webUser.getGuardian().getKids()) {
+            if (kid.getID() == kidID) {
+                currentKid = kid;
+            }
+        }
+        eTicket eTick = currentKid.getETicket();
+        showETicket(currentKid, eTick);
+        boolean exit = false;
+        while (!exit) {
+            int choice = printThirdStepMenu();
+            switch (choice) {
+                case 1:
+                    addEntries(currentKid, webUser, eTick);
+                    continue;
+                case 2:
+                    removeEntries(currentKid, webUser, eTick);
+                    continue;
+                case 3:
+                    removeKid(kidID, webUser);
+                    continue;
+                case 4:
+                    showETicket(currentKid,eTick);
+                    continue;
+                case 5:
+                    System.out.println("Back to previous menu :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
+    }
+
+    private void loggedInUser(WebUser webUser) {
+        boolean exit = false;
+        while (!exit) {
+            int choice = printSecondStepMenu();
+            switch (choice) {
+                case 1:
+                    addKid();
+                    continue;
+                case 2:
+                    showMyKids(webUser);
+                    continue;
+                case 3:
+                    int kidID = chooseKidMenu(webUser);
+                    manageKid(kidID, webUser);
+                    continue;
+                case 4:
+                    System.out.println("Goodbye, see you again soon :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
+    }
+
+    public void mainMenu(){
+        boolean exit = false;
+        WebUser wb;
+        while (!exit) {
+            int choice = printFirstStepMenu();
+            switch (choice) {
+                case 1:
+                    wb = loginMenu();
+                    if (wb != null)
+                        loggedInUser(wb);
+                    continue;
+                case 2:
+                    wb = signUpMenu();
+                    if (wb != null)
+                        loggedInUser(wb);
+                    continue;
+                case 3:
+                    System.out.println("Goodbye, see you again soon :) ");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Wrong choice");
+            }
+        }
     }
 }

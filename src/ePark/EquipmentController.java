@@ -7,6 +7,7 @@ import java.util.Random;
 import impl.*;
 
 public class EquipmentController {
+    List<eBand> existingBands = new ArrayList<>();
     public List<Integer> getMeasurementsFromMeasureDevice() {
         List<Integer> returnMeasure = new ArrayList<>();
         Random r = new Random();
@@ -21,7 +22,11 @@ public class EquipmentController {
     }
 
     public eBand createNewEBand() {
-        return null;
+        if(!existingBands.isEmpty())
+            return existingBands.remove(0);
+        else{
+            return new eBand();
+        }
     }
 
     public boolean returnUsedBand(eBand eBand) {

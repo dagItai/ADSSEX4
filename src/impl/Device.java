@@ -270,7 +270,7 @@ public class Device
     }
 
     public boolean validDeviceForKid(int kidAge, int kidHeight, int kidWeight){
-        return kidAge>=minAge && kidHeight >= minHeight && kidAge >= kidWeight;
+        return kidAge>=minAge && kidHeight >= minHeight && kidWeight >= minWeight;
     }
 
     public void delete()
