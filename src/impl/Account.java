@@ -133,7 +133,7 @@ public class Account {
         if(amount > balance){
             return false;
         }
-        balance=-amount;
+        balance-=amount;
         return true;
     }
 }
