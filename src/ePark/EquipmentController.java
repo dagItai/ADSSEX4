@@ -17,7 +17,6 @@ public class EquipmentController {
         low = 20;
         high = 90;
         returnMeasure.add(r.nextInt(high - low) + low);
-
         return returnMeasure;
     }
 

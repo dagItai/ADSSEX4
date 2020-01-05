@@ -233,10 +233,11 @@ public class ParkController {
             if(kid.getID() == kidID){
                 eTicket eTick = kid.getETicket();
                 for (Entry entry : eTick.getEntries()) {
-                    if(entry.getDeviceID() == deviceID)
+                    if(entry.getDeviceID() == deviceID) {
                         eTick.removeEntry(entry);
                         WebController.systemObjects.remove(entry);
                         return true;
+                    }
                 }
             }
         }

@@ -65,7 +65,7 @@ public class WebController {
                 "Mastercard, which starts with 2\n" +
                 "American Express, which starts with 3");
         creditNumber = keyBoard.next();
-        System.out.println("And Now Please Enter Your Budget Limit For The Park, Please Note That The  Your Budget Limit Should Be At Least $10");
+        System.out.println("And Now Please Enter Your Budget Limit For The Park, Please Note That The  Your Budget Limit Should Be At Least 10 shekel");
         limitCredit = keyBoard.next();
         if(!parkController.checkValidCredit(creditNumber,limitCredit)) {
             System.out.println("Something went wrong .. We Sorry But You Will Have To Go All This Process Again");
@@ -276,7 +276,7 @@ public class WebController {
         System.out.println("Here are all the kids that are associated with you");
         List<Pair<Integer,String>> kids = parkController.getKidsOfGuardian(webUser.getGuardian());
         kids.stream().forEach(e ->
-                System.out.println("Name: " + e.getKey() + " ,Id: " + e.getValue()));
+                System.out.println("Name: " + e.getValue() + " ,Id: " + e.getKey()));
         System.out.println("Please choose the ID you would like to manage");
         Scanner keyboard = new Scanner(System.in);
         boolean selected = false;
@@ -363,7 +363,7 @@ public class WebController {
         }
     }
 
-    private boolean handleExtremeDevice(int kidID, int addedEntries, int deviceID) {
+    private boolean handleExtremeDevice(int kidID, int deviceID) {
         System.out.println(parkController.getDeviceName(deviceID) + " id:" + deviceID + "is EXTREME! please approve that you would like to let your kid get on this device");
         System.out.println("press 'y' for yes or 'n' for no");
         Scanner keyboard = new Scanner(System.in);
@@ -408,7 +408,7 @@ public class WebController {
         int addedEntries = 0;
         for (Integer deviceID : devicesToAdd) {
             if (parkController.isDeviceExtreme(deviceID)) {
-                if(handleExtremeDevice(kidID, addedEntries, deviceID)){
+                if(handleExtremeDevice(kidID, deviceID)){
                     addedEntries++;
                     entriesAdded.add(deviceID);
                 }
