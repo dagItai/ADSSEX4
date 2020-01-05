@@ -137,7 +137,7 @@ public class eTicket {
     public boolean removeEntry(Entry aEntry) {
         boolean wasRemoved = false;
         //Unable to remove aEntry, as it must always have a src.impl.eTicket
-        if (!this.equals(aEntry.getETicket())) {
+        if (this.equals(aEntry.getETicket())) {
             entries.remove(aEntry);
             wasRemoved = true;
         }
