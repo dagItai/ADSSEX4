@@ -216,24 +216,6 @@ public class Guardian {
         return wasAdded;
     }
 
-    public boolean addOrMoveKidAt(Kid aKid, int index) {
-        boolean wasAdded = false;
-        if (kids.contains(aKid)) {
-            if (index < 0) {
-                index = 0;
-            }
-            if (index > numberOfKids()) {
-                index = numberOfKids() - 1;
-            }
-            kids.remove(aKid);
-            kids.add(index, aKid);
-            wasAdded = true;
-        } else {
-            wasAdded = addKidAt(aKid, index);
-        }
-        return wasAdded;
-    }
-
     public void delete() {
         Account existingAccount = account;
         account = null;

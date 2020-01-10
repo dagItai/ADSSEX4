@@ -122,23 +122,6 @@ public class CreditCompany {
         return wasAdded;
     }
 
-    public boolean addOrMoveAccountAt(Account aAccount, int index) {
-        boolean wasAdded = false;
-        if (accounts.contains(aAccount)) {
-            if (index < 0) {
-                index = 0;
-            }
-            if (index > numberOfAccounts()) {
-                index = numberOfAccounts() - 1;
-            }
-            accounts.remove(aAccount);
-            accounts.add(index, aAccount);
-            wasAdded = true;
-        } else {
-            wasAdded = addAccountAt(aAccount, index);
-        }
-        return wasAdded;
-    }
 
     public void delete() {
         for (int i = accounts.size(); i > 0; i--) {

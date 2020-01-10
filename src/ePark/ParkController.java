@@ -16,7 +16,7 @@ public class ParkController {
     private CreditCardController ccController = new CreditCardController();
     private EquipmentController equipmentController = new EquipmentController();
     private eBandController eBandController = new eBandController();
-    private static int kID=1;
+    private static int kID = 1;
 
     public ParkController() {
         addStartDevices();
@@ -24,8 +24,8 @@ public class ParkController {
     }
 
     public Kid addNewKidToPark(Guardian guardian, String kidName, String kidAge) {
-        Kid newKid = new Kid(kID,kidName,Integer.valueOf(kidAge),guardian);
-        eTicket newKideTicket = new eTicket(kID, new Date(),newKid);
+        Kid newKid = new Kid(kID, kidName, Integer.valueOf(kidAge), guardian);
+        eTicket newKideTicket = new eTicket(kID, new Date(), newKid);
         kID++;
         //Create eBand
         eBand newKideband = equipmentController.createNewEBand();
@@ -34,7 +34,7 @@ public class ParkController {
         newKid.seteBand(newKideband);
         newKid.seteTicket(newKideTicket);
         newKideTicket.setKid(newKid);
-        System.out.println( newKid.getName()+ " added to your kids");
+        System.out.println(newKid.getName() + " added to your kids");
         //Last Step - Measuring
         System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
         List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
@@ -54,7 +54,7 @@ public class ParkController {
 
     public void returnKidBand(int kidID) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID)
+            if (kid.getID() == kidID)
                 equipmentController.returnUsedBand(kid.getEBand());
         }
     }
@@ -62,18 +62,18 @@ public class ParkController {
     public boolean removeAndChrageKid(int kidID, Guardian guardian) {
         Kid currKid = null;
         for (Kid kid : kids) {
-            if(kid.getID() == kidID)
+            if (kid.getID() == kidID)
                 currKid = kid;
         }
         int numOfEntries = currKid.getETicket().getEntries().size();
-        int finalCharge = numOfEntries*10;
-        if ( finalCharge>0 ){// we need to pay balnace < maxPrice
-            if (ccController.chargeCard(guardian.getCreditCard(), finalCharge)){
-                System.out.println("We will charge your credit card for: "+ finalCharge+ " shekel");
+        int finalCharge = numOfEntries * 10;
+        if (finalCharge > 0) {// we need to pay balnace < maxPrice
+            if (ccController.chargeCard(guardian.getCreditCard(), finalCharge)) {
+                System.out.println("We will charge your credit card for: " + finalCharge + " shekel");
                 //System.out.println("balance:" +guardian.getAccount().getBalance());
             }
         }
-        if (guardian.removeKid(currKid)){
+        if (guardian.removeKid(currKid)) {
             WebController.systemObjects.remove(currKid.getETicket());
             WebController.systemObjects.remove(currKid);
             kids.remove(currKid);
@@ -81,8 +81,7 @@ public class ParkController {
             // System.out.println("");
             return true;
 
-        }
-        else { // means he is only child:)
+        } else { // means he is only child:)
             WebController.systemObjects.remove(guardian);
             WebController.systemObjects.remove(guardian.getWebUser());
             WebController.systemObjects.remove(guardian.getAccount());
@@ -118,35 +117,34 @@ public class ParkController {
         WebController.systemObjects.add(amex);
     }
 
-    public void getRelevantDevicesForKid(){
+    public void getRelevantDevicesForKid() {
 
     }
-
 
 
     public List<Pair<Integer, String>> getKidsOfGuardian(Guardian guardian) {
         List<Pair<Integer, String>> kids = new ArrayList<>();
         for (Kid kid : guardian.getKids()) {
-            kids.add(new Pair(kid.getID(),kid.getName()));
+            kids.add(new Pair(kid.getID(), kid.getName()));
         }
         return kids;
     }
 
-    public Pair<Double,Double> getCoordinatesOfKid(Integer key) {
+    public Pair<Double, Double> getCoordinatesOfKid(Integer key) {
         for (Kid kid : kids) {
-            if(kid.getID() == key)
+            if (kid.getID() == key)
                 return eBandController.getCoordinatesOfBand(kid.getEBand());
         }
         return null;
     }
 
-    public List<Pair<Integer, String>> getRelevantDevicesForKid(Integer key){
+    public List<Pair<Integer, String>> getRelevantDevicesForKid(Integer key) {
         List<Pair<Integer, String>> relevantDevices = new ArrayList<>();
         for (Kid kid : kids) {
-            if(kid.getID() == key){
+            if (kid.getID() == key) {
                 for (Device parkDevice : parkDevices) {
                     if (parkDevice.validDeviceForKid(kid.getAge(), kid.getHeight(), kid.getWeight())) {
-                        relevantDevices.add(new Pair(parkDevice.getID(),parkDevice.getName()));
+                        relevantDevices.add(new Pair(parkDevice.getID(), parkDevice.getName()));
                     }
                 }
             }
@@ -155,15 +153,13 @@ public class ParkController {
     }
 
 
-    private CreditCompany creditCompanyFromCreditNumber(String cNumber){
+    private CreditCompany creditCompanyFromCreditNumber(String cNumber) {
         int firstNumber = Integer.valueOf(cNumber.charAt(0));
-        if(firstNumber==1){
+        if (firstNumber == 1) {
             return parkCompanies.get(0);
-        }
-        else if(firstNumber==2){
+        } else if (firstNumber == 2) {
             return parkCompanies.get(1);
-        }
-        else {
+        } else {
             return parkCompanies.get(2);
         }
     }
@@ -174,15 +170,15 @@ public class ParkController {
 
     public boolean kidHasThisEntry(int kidID, int deviceId) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID)
-                return kid.getETicket().getEntries().stream().anyMatch(e -> e.getDeviceID()==deviceId);
+            if (kid.getID() == kidID)
+                return kid.getETicket().getEntries().stream().anyMatch(e -> e.getDeviceID() == deviceId);
         }
         return false;
     }
 
     public Date getETickExpireDateForKid(int kidID) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID)
+            if (kid.getID() == kidID)
                 return kid.getETicket().getExpireDate();
         }
         return null;
@@ -190,7 +186,7 @@ public class ParkController {
 
     public String getKidName(int kidID) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID)
+            if (kid.getID() == kidID)
                 return kid.getName();
         }
         return null;
@@ -200,40 +196,40 @@ public class ParkController {
     public List<Integer> getEntriesForKid(int kidID) {
         List<Integer> entries = new ArrayList<>();
         for (Kid kid : kids) {
-            if(kid.getID() == kidID){
+            if (kid.getID() == kidID) {
                 entries.addAll(kid.getETicket().getEntries().stream().mapToInt(e -> e.getDeviceID()).boxed().collect(Collectors.toList()));
             }
         }
         return entries;
     }
 
-    public String getDeviceName(int deviceID){
+    public String getDeviceName(int deviceID) {
         for (Device parkDevice : parkDevices) {
-            if(parkDevice.getID()==deviceID)
+            if (parkDevice.getID() == deviceID)
                 return parkDevice.getName();
         }
         return null;
     }
 
-    public void addDeviceToKid(int kidID, int deviceID){
+    public void addDeviceToKid(int kidID, int deviceID) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID){
+            if (kid.getID() == kidID) {
                 Entry e = new Entry(deviceID, kid.getETicket());
                 WebController.systemObjects.add(e);
             }
         }
     }
 
-    public boolean removeFromGuardianBalance(Guardian guardian, int numOfEntries){
+    public boolean removeFromGuardianBalance(Guardian guardian, int numOfEntries) {
         return guardian.getAccount().removeFromBalance(numOfEntries * 10);
     }
 
-    public boolean removeEntryFromKid(int kidID, int deviceID){
+    public boolean removeEntryFromKid(int kidID, int deviceID) {
         for (Kid kid : kids) {
-            if(kid.getID() == kidID){
+            if (kid.getID() == kidID) {
                 eTicket eTick = kid.getETicket();
                 for (Entry entry : eTick.getEntries()) {
-                    if(entry.getDeviceID() == deviceID) {
+                    if (entry.getDeviceID() == deviceID) {
                         eTick.removeEntry(entry);
                         WebController.systemObjects.remove(entry);
                         return true;
@@ -244,33 +240,33 @@ public class ParkController {
         return false;
     }
 
-    public boolean addToGuardianBalance(Guardian guardian, int removedEntries){
+    public boolean addToGuardianBalance(Guardian guardian, int removedEntries) {
         return guardian.getAccount().addToBalance(removedEntries * 10);
     }
 
     public boolean checkValidCredit(String creditNumber, String limitCredit) {
         try {
             int creditNum = Integer.valueOf(creditNumber);
-            int firstNumber = Integer.parseInt(creditNumber.charAt(0)+"");
+            int firstNumber = Integer.parseInt(creditNumber.charAt(0) + "");
             int creditLimit = Integer.valueOf(limitCredit);
-            if(firstNumber<1 || firstNumber>3 || creditLimit<10){
+            if (firstNumber < 1 || firstNumber > 3 || creditLimit < 10) {
                 return false;
             }
-            return ccController.validateCard(creditNum,creditLimit);
-        } catch (Exception e){
+            return ccController.validateCard(creditNum, creditLimit);
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public WebUser getWebUser(String kidName, String kidAge, String creditNumber, String limitCredit, String userName, String password, int gID, String gName) {
-        Guardian newGuardian = new Guardian(gID,gName,Integer.valueOf(creditNumber));
-        WebUser newWebUser = new WebUser(userName,password,newGuardian);
-        Account newAccount = new Account(Integer.valueOf(creditNumber),Integer.valueOf(limitCredit),creditCompanyFromCreditNumber(creditNumber),newGuardian);
+    public WebUser getWebUser(String kidName, String kidAge, int kidWeight, int kidHeight, String creditNumber, String limitCredit, String userName, String password, int gID, String gName) {
+        Guardian newGuardian = new Guardian(gID, gName, Integer.valueOf(creditNumber));
+        WebUser newWebUser = new WebUser(userName, password, newGuardian);
+        Account newAccount = new Account(Integer.valueOf(creditNumber), Integer.valueOf(limitCredit), creditCompanyFromCreditNumber(creditNumber), newGuardian);
         newGuardian.setWebUser(newWebUser);
         newGuardian.setAccount(newAccount);
         //Create kid, eTicket
-        Kid newKid = new Kid(kID,kidName,Integer.valueOf(kidAge),newGuardian);
-        eTicket newKideTicket = new eTicket(kID, new Date(),newKid);
+        Kid newKid = new Kid(kID, kidName, Integer.valueOf(kidAge), newGuardian);
+        eTicket newKideTicket = new eTicket(kID, new Date(), newKid);
         kID++;
         //Create eBand
         eBand newKideband = equipmentController.createNewEBand();
@@ -282,8 +278,9 @@ public class ParkController {
 
         //Last Step - Measuring
         List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
-        newKid.setHeight(measures.get(0));
-        newKid.setWeight(measures.get(1));
+
+        newKid.setHeight(kidHeight);
+        newKid.setWeight(kidWeight);
 
         newGuardian.addKid(newKid);
 
@@ -297,6 +294,10 @@ public class ParkController {
         //Add To local lists
         kids.add(newKid);
         return newWebUser;
+    }
+
+    public List<Integer> getMeasurements(){
+        return equipmentController.getMeasurementsFromMeasureDevice();
     }
 
     public String getGurdianName(Guardian guardian) {

@@ -14,7 +14,6 @@ public class WebUser {
     //------------------------
     // MEMBER VARIABLES
     //------------------------
-
     //src.impl.WebUser Attributes
     private String userName;
     private String password;

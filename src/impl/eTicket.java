@@ -169,24 +169,6 @@ public class eTicket {
         return wasAdded;
     }
 
-    public boolean addOrMoveEntryAt(Entry aEntry, int index) {
-        boolean wasAdded = false;
-        if (entries.contains(aEntry)) {
-            if (index < 0) {
-                index = 0;
-            }
-            if (index > numberOfEntries()) {
-                index = numberOfEntries() - 1;
-            }
-            entries.remove(aEntry);
-            entries.add(index, aEntry);
-            wasAdded = true;
-        } else {
-            wasAdded = addEntryAt(aEntry, index);
-        }
-        return wasAdded;
-    }
-
     public void delete() {
         while (entries.size() > 0) {
             Entry aEntry = entries.get(entries.size() - 1);
