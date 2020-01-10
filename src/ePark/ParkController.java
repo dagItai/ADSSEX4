@@ -23,7 +23,7 @@ public class ParkController {
         addCreditCardCompanies();
     }
 
-    public Kid addNewKidToPark(Guardian guardian, String kidName, String kidAge) {
+    public boolean addNewKidToPark(Guardian guardian, String kidName, String kidAge, int kidHeight, int kidWeight) {
         Kid newKid = new Kid(kID, kidName, Integer.valueOf(kidAge), guardian);
         eTicket newKideTicket = new eTicket(kID, new Date(), newKid);
         kID++;
@@ -37,9 +37,8 @@ public class ParkController {
         System.out.println(newKid.getName() + " added to your kids");
         //Last Step - Measuring
         System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
-        List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
-        newKid.setHeight(measures.get(0));
-        newKid.setWeight(measures.get(1));
+        newKid.setHeight(kidHeight);
+        newKid.setWeight(kidWeight);
 
         guardian.addKid(newKid);
 
@@ -49,7 +48,7 @@ public class ParkController {
         WebController.systemObjects.add(newKideTicket);
         //Add To local lists
         kids.add(newKid);
-        return null;
+        return true;
     }
 
     public void returnKidBand(int kidID) {

@@ -304,10 +304,10 @@ public class WebController {
         return 0;
     }
 
-    private Kid addKid(WebUser webUser) {
+    private boolean addKid(WebUser webUser) {
         Scanner keyBoard = new Scanner(System.in);
-        String kidName = "";
-        String kidAge = "";
+        String kidName = "",kidAge = "";
+        int kidWeight = 0 ,kidHeight = 0;
         boolean validKid = false;
         while (!validKid) {
             System.out.println("Please Enter Your Kid's Name");
@@ -317,10 +317,18 @@ public class WebController {
             if (!checkValidKidDetails(kidName, kidAge)) {
                 System.out.println("Something went wrong .. Below Are The Details Entered\n Kid Name: " + kidName + "\n Kid Age: " + kidAge);
             } else {
+                System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
+
+                List<Integer> measurements = parkController.getMeasurements();
+                kidHeight  = measurements.get(0);
+                kidWeight = measurements.get(1);
+
+                System.out.println("Your kid Height is: " + kidHeight);
+                System.out.println("Your kid Weight is: " + kidWeight);
                 validKid = true;
             }
         }
-        return parkController.addNewKidToPark(webUser.getGuardian(), kidName, kidAge);
+        return parkController.addNewKidToPark(webUser.getGuardian(), kidName, kidAge,kidHeight,kidWeight);
     }
 
     private boolean checkValidKidDetails(String kidName, String kidAge) {
