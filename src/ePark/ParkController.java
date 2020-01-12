@@ -36,7 +36,7 @@ public class ParkController {
         newKideTicket.setKid(newKid);
         System.out.println(newKid.getName() + " added to your kids");
         //Last Step - Measuring
-        System.out.println("One Last Step - Please Put Your Child On The Weight&Height Measuring At The Park Entrance");
+
         newKid.setHeight(kidHeight);
         newKid.setWeight(kidWeight);
 
@@ -276,8 +276,6 @@ public class ParkController {
         newKideTicket.setKid(newKid);
 
         //Last Step - Measuring
-        List<Integer> measures = equipmentController.getMeasurementsFromMeasureDevice();
-
         newKid.setHeight(kidHeight);
         newKid.setWeight(kidWeight);
 

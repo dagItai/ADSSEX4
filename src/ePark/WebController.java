@@ -51,7 +51,7 @@ public class WebController {
         //Try Get Kid Details
         boolean validKid = false;
         while (!validKid) {
-            System.out.println("Please Enter Your Kid's Name");
+            System.out.println("Please Enter Your Kid's first Name");
             kidName = keyBoard.next();
             System.out.println("Please Enter Your Kid Age");
             kidAge = keyBoard.next();
@@ -310,7 +310,7 @@ public class WebController {
         int kidWeight = 0 ,kidHeight = 0;
         boolean validKid = false;
         while (!validKid) {
-            System.out.println("Please Enter Your Kid's Name");
+            System.out.println("Please Enter Your Kid's first Name");
             kidName = keyBoard.next();
             System.out.println("Please Enter Your Kid Age");
             kidAge = keyBoard.next();
@@ -419,12 +419,14 @@ public class WebController {
         showETicket(kidID);
         List<Integer> devicesToAdd = chooseDevicesToAddMenu(kidID);
         List<Integer> entriesAdded = new ArrayList<>();
+        List<Integer> approvedEntries = new ArrayList<>();
         int addedEntries = 0;
         for (Integer deviceID : devicesToAdd) {
-            if (parkController.isDeviceExtreme(deviceID)) {
+            if (parkController.isDeviceExtreme(deviceID) && !approvedEntries.contains(deviceID)) {
                 if (handleExtremeDevice(kidID, deviceID)) {
                     addedEntries++;
                     entriesAdded.add(deviceID);
+                    approvedEntries.add(deviceID);
                 }
             } else {
                 parkController.addDeviceToKid(kidID, deviceID);
