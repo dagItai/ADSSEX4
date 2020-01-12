@@ -26,6 +26,7 @@ public class EquipmentController {
     }
 
     public boolean returnUsedBand(eBand eBand) {
+        WebController.systemObjects.remove(eBand);
         return true;
     }
 }

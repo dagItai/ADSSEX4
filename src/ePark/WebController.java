@@ -294,6 +294,7 @@ public class WebController {
                 if (kids.stream().anyMatch(e -> e.getKey() == choice)) {
                     return choice;
                 } else {
+                    System.out.println("please enter valid ID from the shown list");
                     continue;
                 }
             } catch (Exception e) {
